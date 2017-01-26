@@ -1,9 +1,11 @@
+React + Redux + Flask application
+
 Ensure you have Python2.7 and virtualenv setup
 
 To install the server:
 
 ```
-cd colorboard
+cd diction
 
 virtualenv env
 env/bin/pip install -r require.txt
