@@ -10,7 +10,7 @@ class Index extends React.Component{
 		var words_set = JSON.parse(this.props.words_set)		
 		var html = words_set.map((word_definitions)=>{
 			return(
-				<InfoCard word_definitions={JSON.stringify(word_definitions)}/>
+				<InfoCard key={word_definitions['define']} word_definitions={JSON.stringify(word_definitions)}/>
 			)
 		})	
 

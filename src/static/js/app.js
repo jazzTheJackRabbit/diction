@@ -30944,10 +30944,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.FETCH_DEFINITION = exports.UPDATE_SEARCH_TERM = exports.DELETE_POST = exports.CREATE_POST = exports.FETCH_POSTS = exports.FETCH_POST = undefined;
 exports.fetchDefinition = fetchDefinition;
 exports.updateSearchState = updateSearchState;
-exports.deletePost = deletePost;
-exports.fetchPost = fetchPost;
-exports.fetchPosts = fetchPosts;
-exports.createPost = createPost;
 
 var _axios = require("axios");
 
@@ -30979,46 +30975,6 @@ function updateSearchState(term) {
 	return {
 		type: UPDATE_SEARCH_TERM,
 		payload: term
-	};
-}
-
-function deletePost(id) {
-	var API_PATH = "/posts/";
-	var requestPromise = _axios2.default.delete("" + ROOT_URL + API_PATH + id + API_KEY);
-
-	return {
-		type: DELETE_POST,
-		payload: requestPromise
-	};
-}
-
-function fetchPost(id) {
-	var API_PATH = "/posts/";
-	var requestPromise = _axios2.default.get("" + ROOT_URL + API_PATH + id + API_KEY);
-
-	return {
-		type: FETCH_POST,
-		payload: requestPromise
-	};
-}
-
-function fetchPosts() {
-	var API_PATH = "/posts";
-	var requestPromise = _axios2.default.get("" + ROOT_URL + API_PATH + API_KEY);
-
-	return {
-		type: FETCH_POSTS,
-		payload: requestPromise
-	};
-}
-
-function createPost(props) {
-	var API_PATH = "/posts";
-	var requestPromise = _axios2.default.post("" + ROOT_URL + API_PATH + API_KEY, props);
-
-	return {
-		type: CREATE_POST,
-		payload: requestPromise
 	};
 }
 },{"axios":1}],336:[function(require,module,exports){
@@ -31091,8 +31047,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // TODO: Probably change to stateless component?
 var InfoCard = function InfoCard(props) {
-	var word = JSON.parse(props.word_definitions);
-	var html = word.data.map(function (definition) {
+	var word = JSON.parse(props.word_definitions).data['definition_sets'];
+	var html = word.map(function (definition) {
+		var definitions = definition.definitions.map(function (defn) {
+			defn = defn.trim();
+			if (defn[0] == ":") {
+				defn = defn.slice(1);
+			}
+
+			if (defn.length) {
+				return _react2.default.createElement(
+					'li',
+					null,
+					defn
+				);
+			}
+		});
 		return _react2.default.createElement(
 			'div',
 			{ className: 'ui left aligned content' },
@@ -31105,7 +31075,7 @@ var InfoCard = function InfoCard(props) {
 				'div',
 				{ className: 'meta' },
 				_react2.default.createElement(
-					'span',
+					'p',
 					null,
 					definition.part_of_speech
 				)
@@ -31113,7 +31083,11 @@ var InfoCard = function InfoCard(props) {
 			_react2.default.createElement(
 				'div',
 				{ className: 'description' },
-				definition.definitions
+				_react2.default.createElement(
+					'ul',
+					null,
+					definitions
+				)
 			)
 		);
 	});
@@ -31178,7 +31152,7 @@ var Index = function (_React$Component) {
 		value: function render() {
 			var words_set = JSON.parse(this.props.words_set);
 			var html = words_set.map(function (word_definitions) {
-				return _react2.default.createElement(_component_card2.default, { word_definitions: JSON.stringify(word_definitions) });
+				return _react2.default.createElement(_component_card2.default, { key: word_definitions['define'], word_definitions: JSON.stringify(word_definitions) });
 			});
 
 			console.log(html);
@@ -31438,26 +31412,27 @@ exports.default = function () {
 
 var _index = require('../actions/index');
 },{"../actions/index":335}],345:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
 exports.default = function () {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 	var action = arguments[1];
 
 	if (action.payload) {
 		switch (action.type) {
 			case _index.UPDATE_SEARCH_TERM:
+				console.log(action.payload);
 				return action.payload;
 		}
 	}
-	return state;
+	return "";
 };
 
-var _index = require('../actions/index');
+var _index = require("../actions/index");
 },{"../actions/index":335}],346:[function(require,module,exports){
 'use strict';
 
