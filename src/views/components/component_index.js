@@ -9,12 +9,12 @@ class Index extends React.Component{
 	render(){	
 		var words_set = JSON.parse(this.props.words_set)		
 		var html = words_set.map((word_definitions)=>{
-			return(
-				<InfoCard key={word_definitions['define']} word_definitions={JSON.stringify(word_definitions)}/>
-			)
+			if(word_definitions.data['definition_sets'].length){
+				return(
+					<InfoCard key={word_definitions.data['define']} word_definitions={JSON.stringify(word_definitions)}/>
+				)
+			}
 		})	
-
-		console.log(html)
 		return(
 			<div className="ui sixteen wide column">
 				<div className="ui hidden divider"></div>

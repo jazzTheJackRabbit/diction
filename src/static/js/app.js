@@ -31050,17 +31050,19 @@ var InfoCard = function InfoCard(props) {
 	var word = JSON.parse(props.word_definitions).data['definition_sets'];
 	var html = word.map(function (definition) {
 		var definitions = definition.definitions.map(function (defn) {
-			defn = defn.trim();
-			if (defn[0] == ":") {
-				defn = defn.slice(1);
-			}
+			if (defn) {
+				defn = defn.trim();
+				if (defn[0] == ":") {
+					defn = defn.slice(1);
+				}
 
-			if (defn.length) {
-				return _react2.default.createElement(
-					'li',
-					null,
-					defn
-				);
+				if (defn.length) {
+					return _react2.default.createElement(
+						'li',
+						null,
+						defn
+					);
+				}
 			}
 		});
 		return _react2.default.createElement(
@@ -31152,10 +31154,10 @@ var Index = function (_React$Component) {
 		value: function render() {
 			var words_set = JSON.parse(this.props.words_set);
 			var html = words_set.map(function (word_definitions) {
-				return _react2.default.createElement(_component_card2.default, { key: word_definitions['define'], word_definitions: JSON.stringify(word_definitions) });
+				if (word_definitions.data['definition_sets'].length) {
+					return _react2.default.createElement(_component_card2.default, { key: word_definitions.data['define'], word_definitions: JSON.stringify(word_definitions) });
+				}
 			});
-
-			console.log(html);
 			return _react2.default.createElement(
 				'div',
 				{ className: 'ui sixteen wide column' },
@@ -31344,7 +31346,9 @@ exports.default = function () {
 	if (action.payload) {
 		switch (action.type) {
 			case _index.FETCH_DEFINITION:
-				state.unshift(action.payload);
+				if (action.payload.data['definition_sets'].length) {
+					state.unshift(action.payload);
+				}
 		}
 	}
 	return state;
@@ -31425,7 +31429,6 @@ exports.default = function () {
 	if (action.payload) {
 		switch (action.type) {
 			case _index.UPDATE_SEARCH_TERM:
-				console.log(action.payload);
 				return action.payload;
 		}
 	}

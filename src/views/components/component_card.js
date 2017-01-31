@@ -8,15 +8,17 @@ const InfoCard = function(props){
 	var word = JSON.parse(props.word_definitions).data['definition_sets']
 	var html = word.map((definition) => {
 		var definitions = definition.definitions.map(defn=>{
-			defn = defn.trim()
-			if(defn[0] == ":"){
-				defn = defn.slice(1)				
-			}
+			if(defn){
+				defn = defn.trim()
+				if(defn[0] == ":"){
+					defn = defn.slice(1)				
+				}
 
-			if(defn.length){
-				return(
-					<li>{defn}</li>
-				)
+				if(defn.length){
+					return(
+						<li>{defn}</li>
+					)
+				}		
 			}			
 		})
 		return(
