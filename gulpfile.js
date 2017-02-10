@@ -1,42 +1,23 @@
-const source = require('vinyl-source-stream')
-const browserify = require('browserify')
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const del = require('del')
+var gulp = require('gulp');
+var browserify = require('browserify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
 const livereload = require('gulp-livereload');
- 
-gulp.task('babelify', () => {
-    return gulp.src('src/views/**/*.js')
-        .pipe(babel({
-            presets: ['es2015', 'react']
+
+gulp.task('build', function () {
+  livereload.listen();  
+    return browserify({entries: './src/views/index.js', extensions: ['.js'], debug: true})
+        .transform(babelify.configure({
+          presets : ["es2015", "react"]
         }))
-        .pipe(gulp.dest('src/static/temp/'))
+        .bundle()
+        .pipe(source('app.js'))
+        .pipe(gulp.dest('./src/static/js/'))
+        .pipe(livereload({}));
 });
 
-gulp.task('browserify',['babelify'], function(){
-	return browserify('./src/static/temp/index.js')
-			.bundle()
-			.pipe(source('app.js'))
-			.pipe(gulp.dest('./src/static/js/'))
-      .pipe(livereload({
-      }));
+gulp.task('watch', ['build'], function () {
+    gulp.watch('./src/views/**/*.js', ['build']);
 });
 
-gulp.task('del', function () {
-  return del(['./src/static/temp']);
-});
-
-gulp.task('build', ['browserify'], function(){
-  gulp.start('del')
-})
-
-gulp.task('watch', function() {      
-  gulp.watch('./src/views/**/*.js', function() {    
-    gulp.start('build')
-  });
-});
-
-gulp.task('default', ['build'], function(){  
-  gulp.start('watch')
-  livereload.listen();
-});
+gulp.task('default', ['watch']);
