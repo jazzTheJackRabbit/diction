@@ -11,6 +11,13 @@ export const FETCH_DEFINITION = "FETCH_DEFINITION"
 const ROOT_URL = "http://reduxblog.herokuapp.com/api"
 const API_KEY = "?key=lorem"
 
+export function getImages(){
+	return({
+		type: "GET_IMAGES",
+		payload: null
+	})
+}
+
 export function fetchDefinition(term){
 	const API_PATH = "/define/"
 	var requestPromise = axios.get(`http://localhost:5000${API_PATH}${term}`)
